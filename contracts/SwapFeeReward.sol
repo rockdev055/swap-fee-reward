@@ -97,7 +97,7 @@ contract SwapFeeReward is Ownable{
     uint256 public maxMiningInPhase = 5000 * 1e18;
     uint public currentPhase = 1;
     uint256 public totalMined = 0;
-    IHswToken public bswToken;
+    IHswToken public hswToken;
     IOracle public oracle;
     address public targetToken;
     
@@ -126,14 +126,14 @@ contract SwapFeeReward is Ownable{
         address _factory,
         address _router,
         bytes32 _INIT_CODE_HASH,
-        IHswToken _bswToken,
+        IHswToken _hswToken,
         IOracle _Oracle,
         address _targetToken
     ) public {
         factory = _factory;
         router = _router;
         INIT_CODE_HASH = _INIT_CODE_HASH;
-        bswToken = _bswToken;
+        hswToken = _hswToken;
         oracle = _Oracle;
         targetToken = _targetToken;
 
@@ -236,7 +236,7 @@ contract SwapFeeReward is Ownable{
         require(totalMined.add(balance) <= currentPhase.mul(maxMiningInPhase), 'SwapFeeReward: Mined all tokens in this phase');
         permit(msg.sender, balance, deadline, v, r, s);
         if (balance > 0){
-            bswToken.mint(msg.sender, balance);
+            hswToken.mint(msg.sender, balance);
             _balances[msg.sender] = _balances[msg.sender].sub(balance);
             emit Withdraw(msg.sender, balance);
             totalMined = totalMined.add(balance);
